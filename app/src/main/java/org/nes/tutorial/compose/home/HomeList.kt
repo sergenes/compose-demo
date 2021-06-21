@@ -49,12 +49,9 @@ fun ListTest() {
             }
         }
     ) {
-        HomeListLazy(
-            editMode, data, {},
-            { index ->
-                data.removeAt(index)
-            }
-        )
+        HomeListLazy(editMode = editMode, itemsSource = data, clickItemHandler = {}) { index ->
+            data.removeAt(index)
+        }
     }
 }
 
@@ -62,7 +59,7 @@ fun ListTest() {
 fun HomeList(
     editMode: Boolean,
     items: SnapshotStateList<ListFile>,
-    selectItemHandler: (Int) -> Unit,
+    clickItemHandler: (Int) -> Unit,
     deleteItemHandler: (Int) -> Unit
 ) {
     Column {
@@ -70,7 +67,7 @@ fun HomeList(
             1 -> items.first().let {
                 HomeListItem(
                     it.fileName, it.created, RowType.SINGLE, editMode,
-                    { selectItemHandler(0) },
+                    { clickItemHandler(0) },
                     { deleteItemHandler(0) }
                 )
             }
@@ -83,7 +80,7 @@ fun HomeList(
                     }
                     HomeListItem(
                         data.fileName, data.created, rowType, editMode,
-                        { selectItemHandler(index) },
+                        { clickItemHandler(index) },
                         { deleteItemHandler(index) }
                     )
                 }
@@ -96,7 +93,7 @@ fun HomeList(
 fun HomeListLazy(
     editMode: Boolean,
     itemsSource: SnapshotStateList<ListFile>,
-    selectItemHandler: (Int) -> Unit,
+    clickItemHandler: (Int) -> Unit,
     deleteItemHandler: (Int) -> Unit
 ) {
     LazyColumn {
@@ -105,7 +102,7 @@ fun HomeListLazy(
                 item {
                     HomeListItem(
                         it.fileName, it.created, RowType.SINGLE, editMode,
-                        { selectItemHandler(0) },
+                        { clickItemHandler(0) },
                         { deleteItemHandler(0) }
                     )
                 }
@@ -119,7 +116,7 @@ fun HomeListLazy(
                     }
                     HomeListItem(
                         item.fileName, item.created, rowType, editMode,
-                        { selectItemHandler(index) },
+                        { clickItemHandler(index) },
                         { deleteItemHandler(index) }
                     )
                 }
