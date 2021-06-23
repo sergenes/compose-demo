@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
@@ -28,8 +27,8 @@ fun NiceButton(
     Button(
         onClick = onClick,
         modifier = Modifier
-            .padding(8.dp)
-            .height(44.dp),
+            .padding(smallSpace)
+            .height(normalTouchableHeight),
         shape = RoundedCornerShape(30),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = textColor,

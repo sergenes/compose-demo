@@ -25,6 +25,7 @@ val primaryColor = Color(0xffadf4ff)
 val normalSpace = 16.dp
 val smallSpace = 8.dp
 val noSpace = 0.dp
+val normalTouchableHeight = 44.dp
 
 val noRadius = 0.dp
 val normalRadius = 16.dp
