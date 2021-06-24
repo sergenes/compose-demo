@@ -32,10 +32,6 @@ import org.nes.tutorial.compose.common.primaryTextColor
 import org.nes.tutorial.compose.common.rowHeight
 import org.nes.tutorial.compose.common.smallSpace
 
-enum class RowType {
-    TOP, MIDDLE, BOTTOM, SINGLE
-}
-
 @Preview
 @Composable
 fun TestSingle() {
@@ -64,6 +60,10 @@ fun TestBottom() {
 @Composable
 fun TestBottomEdit() {
     HomeListItem("Item Name", "03/13/21", RowType.BOTTOM, true, {}, {})
+}
+
+enum class RowType {
+    TOP, MIDDLE, BOTTOM, SINGLE
 }
 
 @Composable

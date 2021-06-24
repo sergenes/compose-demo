@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.nes.tutorial.compose.common.NiceButton
-import org.nes.tutorial.compose.decklight.StudyCardDeck
+import org.nes.tutorial.compose.home.HomeList
 import org.nes.tutorial.compose.home.ListFile
 import org.nes.tutorial.compose.theme.ComposeDemoTheme
 
@@ -53,13 +53,13 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
-                        StudyCardDeck(0, 3, org.nes.tutorial.compose.decklight.data)
-//                        HomeList(
-//                            editMode, data, {},
-//                            { index ->
-//                                data.removeAt(index)
-//                            }
-//                        )
+//                        StudyCardDeck(0, 3, org.nes.tutorial.compose.decklight.data)
+                        HomeList(
+                            editMode, data, {},
+                            { index ->
+                                data.removeAt(index)
+                            }
+                        )
                     }
                 }
             }
