@@ -61,8 +61,6 @@ data class StudyCard(
 )
 
 private val colors = arrayOf(primaryColor, secondaryColor, tertiaryColor)
-private val initScale: MutableList<Float> = mutableListOf()
-private val initOffset: MutableList<Float> = mutableListOf()
 
 private fun calculateScale(idx: Int): Float {
     return 1f - idx * (1f / 10f)
@@ -81,12 +79,6 @@ fun StudyCardDeck(
     val topCardIdx = 0
     val count = dataSource.size
     val visibleCards: Int = StrictMath.min(visible, dataSource.size - current)
-
-    initScale.clear()
-    repeat(visibleCards) {
-        initScale.add(1f - it * (1f / 10f))
-        initOffset.add(paddingOffset * (it + 1))
-    }
 
     Box(Modifier.fillMaxSize()) {
         repeat(visibleCards) { idx ->
