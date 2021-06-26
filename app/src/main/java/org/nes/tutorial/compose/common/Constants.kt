@@ -34,3 +34,6 @@ const val LOREM_IPSUM_FRONT = "Lorem ipsum dolor sit amet, consectetur adipiscin
 const val LOREM_IPSUM_BACK =
     "Integer dolor nisl, finibus eget dignissim sit amet, semper vel ipsum."
 
+// part. 3
+const val animationTime = 350
+
