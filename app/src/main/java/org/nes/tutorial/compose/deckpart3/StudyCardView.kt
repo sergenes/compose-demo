@@ -1,14 +1,7 @@
 package org.nes.tutorial.compose.deckpart3
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -19,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import org.nes.tutorial.compose.common.*
 import org.nes.tutorial.compose.common.NiceButton
 
@@ -28,6 +22,29 @@ enum class CardFlipState {
 
 enum class CardSwipeState {
     INITIAL, SWIPED, DRAGGING
+}
+
+@Preview
+@Composable
+fun TestStudyCardFrontView() {
+    StudyCardView(
+        backgroundColor = primaryColor,
+        side = CardFlipState.FRONT_FACE,
+        modifier = Modifier.size(cardWidth, cardHeight),
+        content = { frontSideColor ->
+            StudyCardsContent(
+                LOREM_IPSUM_FRONT,
+                frontSideColor
+            )
+        },
+        bottomBar = { frontSideColor ->
+            StudyCardsBottomBar(
+                0, 1, CardFlipState.FRONT_FACE, frontSideColor,
+                leftActionHandler = { },
+                rightActionHandler = { }
+            )
+        }
+    )
 }
 
 @Composable

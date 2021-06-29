@@ -11,14 +11,13 @@ data class StudyCardDeckModel(
     val dataSource: List<StudyCard>,
     val visible: Int = 3,
     val screenWidth: Int,
-    val screenHeight: Int,
-    val preview: Boolean = false
+    val screenHeight: Int
 ) {
     private val colors = arrayOf(primaryColor, secondaryColor, tertiaryColor)
     val count = dataSource.size
     val visibleCards: Int = StrictMath.min(visible, dataSource.size - current)
 
-    fun card(visibleIndex: Int) = dataSource[dataSourceIndex(visibleIndex)]
+    fun cardVisible(visibleIndex: Int) = dataSource[dataSourceIndex(visibleIndex)]
 
     private fun dataSourceIndex(visibleIndex: Int): Int {
         return current + visibleIndex

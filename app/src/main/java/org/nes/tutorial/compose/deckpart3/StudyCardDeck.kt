@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import org.nes.tutorial.compose.common.*
 import org.nes.tutorial.compose.common.NiceButton
-import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckActions
+import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckEvents
 import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckModel
 
 data class StudyCard(
@@ -43,10 +43,9 @@ fun TestStudyCardView() {
         dataSource = data,
         visible = 3,
         screenWidth = 1200,
-        screenHeight = 1600,
-        preview = true
+        screenHeight = 1600
     )
-    val actions = StudyCardDeckActions(
+    val events = StudyCardDeckEvents(
         cardWidth = model.cardWidthPx(),
         cardHeight = model.cardHeightPx(),
         coroutineScope = coroutineScope,
@@ -65,7 +64,7 @@ fun TestStudyCardView() {
 
     Column {
         NiceButton(title = "Test Swipe") {
-            actions.cardSwipe.animateToTarget(CardSwipeState.SWIPED) {
+            events.cardSwipe.animateToTarget(CardSwipeState.SWIPED) {
                 if (topCardIndex < data.lastIndex) {
                     topCardIndex += 1
                 } else {
@@ -73,7 +72,7 @@ fun TestStudyCardView() {
                 }
             }
         }
-        StudyCardDeck(model, actions)
+        StudyCardDeck(model, events)
     }
 }
 
@@ -83,27 +82,27 @@ private const val TOP_Z_INDEX = 100f
 @Composable
 fun StudyCardDeck(
     model: StudyCardDeckModel,
-    actions: StudyCardDeckActions
+    events: StudyCardDeckEvents
 ) {
-    actions.apply {
+    events.apply {
         flipCard.Init()
         cardsInDeck.Init()
-        cardSwipe.InitCardPosition()
+        cardSwipe.Init()
     }
     Box(Modifier.fillMaxSize()) {
         repeat(model.visibleCards) { visibleIndex ->
-            val isFront = actions.flipCard.isFrontSide()
-            val card = model.card(visibleIndex)
+            val isFront = events.flipCard.isFrontSide()
+            val card = model.cardVisible(visibleIndex)
             val cardColor = model.colorForIndex(visibleIndex)
             val cardData = if (isFront) card.frontVal else card.backVal
             val cardLanguage = if (isFront) card.frontLang else card.backLang
             val cardSide = if (visibleIndex > TOP_CARD_INDEX) {
                 CardFlipState.FRONT_FACE
             } else {
-                actions.flipCard.cardSide()
+                events.flipCard.cardSide()
             }
             val cardZIndex = TOP_Z_INDEX - visibleIndex
-            val cardModifier = actions.makeCardModifier(TOP_CARD_INDEX, visibleIndex)
+            val cardModifier = events.makeCardModifier(TOP_CARD_INDEX, visibleIndex)
                 .align(Alignment.TopCenter)
                 .zIndex(cardZIndex)
                 .size(cardWidth, cardHeight)
@@ -126,17 +125,17 @@ fun StudyCardDeck(
                             frontSideColor = frontSideColor,
                             leftActionHandler = { buttonOnSide ->
                                 if (buttonOnSide == CardFlipState.FRONT_FACE) {
-                                    actions.flipCard.flipToBackSide()
+                                    events.flipCard.flipToBackSide()
                                 } else {
-                                    actions.flipCard.flipToFrontSide()
+                                    events.flipCard.flipToFrontSide()
                                 }
                             },
-                            rightActionHandler = { actions.playHandler.invoke(cardData, cardLanguage) }
+                            rightActionHandler = { events.playHandler.invoke(cardData, cardLanguage) }
                         )
                     }
                 }
             )
-            actions.cardSwipe.backToInitialState()
+            events.cardSwipe.backToInitialState()
         }
     }
 }

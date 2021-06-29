@@ -12,11 +12,11 @@ import kotlinx.coroutines.launch
 import org.nes.tutorial.compose.common.animationTime
 import org.nes.tutorial.compose.common.paddingOffset
 import org.nes.tutorial.compose.deckpart3.CardSwipeState
-import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckActions
+import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckEvents
 import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckModel
 
 data class CardSwipeAnimation(
-    val actions: StudyCardDeckActions,
+    val events: StudyCardDeckEvents,
     val model: StudyCardDeckModel,
     val cardWidth: Float,
     val cardHeight: Float
@@ -24,7 +24,7 @@ data class CardSwipeAnimation(
     private lateinit var cardDragOffset: Animatable<Offset, AnimationVector2D>
 
     @Composable
-    fun InitCardPosition() {
+    fun Init() {
         cardDragOffset = remember {
             Animatable(
                 targetValueByState(CardSwipeState.INITIAL),
@@ -69,7 +69,7 @@ data class CardSwipeAnimation(
     }
 
     fun animateToTarget(state: CardSwipeState, finishedCallback: (Boolean) -> Unit) {
-        actions.coroutineScope.launch {
+        events.coroutineScope.launch {
             val target = targetValueByState(state)
             cardDragOffset.animateTo(
                 targetValue = target,
@@ -94,14 +94,14 @@ data class CardSwipeAnimation(
     }
 
     fun backToInitialState() {
-        actions.coroutineScope.launch {
+        events.coroutineScope.launch {
             cardDragOffset.snapTo(targetValueByState(CardSwipeState.INITIAL))
         }
     }
 
     private fun snapTo(target: Offset) {
-        actions.coroutineScope.launch {
-            actions.cardSwipe.cardDragOffset.snapTo(target)
+        events.coroutineScope.launch {
+            events.cardSwipe.cardDragOffset.snapTo(target)
         }
     }
 
@@ -109,8 +109,8 @@ data class CardSwipeAnimation(
         if (change.pressed) {
             val original =
                 Offset(
-                    actions.cardSwipe.cardDragOffset.value.x,
-                    actions.cardSwipe.cardDragOffset.value.y
+                    events.cardSwipe.cardDragOffset.value.x,
+                    events.cardSwipe.cardDragOffset.value.y
                 )
             val summed = original + change.positionChange()
             val newValue = Offset(
@@ -118,7 +118,7 @@ data class CardSwipeAnimation(
                 y = summed.y
             )
             change.consumePositionChange()
-            actions.cardSwipe.snapTo(Offset(newValue.x, newValue.y))
+            events.cardSwipe.snapTo(Offset(newValue.x, newValue.y))
             callBack()
         }
     }

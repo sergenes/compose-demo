@@ -7,13 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.nes.tutorial.compose.common.paddingOffset
 import org.nes.tutorial.compose.deckpart3.CardSwipeState
 import org.nes.tutorial.compose.deckpart3.animations.CardSwipeAnimation
 import org.nes.tutorial.compose.deckpart3.animations.CardsInDeckAnimation
 import org.nes.tutorial.compose.deckpart3.animations.FlipCardAnimation
 
-data class StudyCardDeckActions(
+data class StudyCardDeckEvents(
     val cardWidth: Float,
     val cardHeight: Float,
     val coroutineScope: CoroutineScope,
@@ -24,7 +25,7 @@ data class StudyCardDeckActions(
     val actionCallback: (String) -> Unit = {}
 ) {
     val cardSwipe: CardSwipeAnimation = CardSwipeAnimation(
-        actions = this,
+        events = this,
         model = model,
         cardWidth = cardWidth,
         cardHeight = cardHeight
@@ -51,7 +52,10 @@ data class StudyCardDeckActions(
                             cardSwipe.animateToTarget(CardSwipeState.DRAGGING) {
                                 if (it) {
                                     nextHandler()
-                                    flipCard.backToInitState()
+                                    coroutineScope.launch {
+                                        flipCard.backToInitState()
+                                    }
+
                                 }
                                 cardsInDeck.backToInitState()
                             }
