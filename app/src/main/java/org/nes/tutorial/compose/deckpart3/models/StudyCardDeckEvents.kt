@@ -61,7 +61,7 @@ data class StudyCardDeckEvents(
                             }
                         },
                         onDrag = { change, _ ->
-                            cardSwipe.druggingCard(change) {
+                            cardSwipe.draggingCard(change) {
                                 cardsInDeck.pushBackToTheFront()
                             }
                         }

@@ -105,7 +105,7 @@ data class CardSwipeAnimation(
         }
     }
 
-    fun druggingCard(change: PointerInputChange, callBack: () -> Unit) {
+    fun draggingCard(change: PointerInputChange, callBack: () -> Unit) {
         if (change.pressed) {
             val original =
                 Offset(
