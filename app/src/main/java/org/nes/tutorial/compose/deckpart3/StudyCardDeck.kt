@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
+import kotlinx.coroutines.CoroutineScope
 import org.nes.tutorial.compose.common.*
 import org.nes.tutorial.compose.common.NiceButton
 import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckEvents
@@ -36,7 +37,7 @@ fun TestStudyCardView() {
         StudyCard(4, "5$LOREM_IPSUM_FRONT", "5$LOREM_IPSUM_BACK"),
         StudyCard(5, "6$LOREM_IPSUM_FRONT", "6$LOREM_IPSUM_BACK")
     )
-    val coroutineScope = rememberCoroutineScope()
+
     var topCardIndex by remember { mutableStateOf(0) }
     val model = StudyCardDeckModel(
         current = topCardIndex,
@@ -48,7 +49,6 @@ fun TestStudyCardView() {
     val events = StudyCardDeckEvents(
         cardWidth = model.cardWidthPx(),
         cardHeight = model.cardHeightPx(),
-        coroutineScope = coroutineScope,
         model = model,
         peepHandler = {},
         playHandler = { _, _ ->
@@ -61,10 +61,14 @@ fun TestStudyCardView() {
             }
         }
     )
+    val coroutineScope = rememberCoroutineScope()
 
     Column {
         NiceButton(title = "Test Swipe") {
-            events.cardSwipe.animateToTarget(CardSwipeState.SWIPED) {
+            events.cardSwipe.animateToTarget(
+                coroutineScope,
+                CardSwipeState.SWIPED
+            ) {
                 if (topCardIndex < data.lastIndex) {
                     topCardIndex += 1
                 } else {
@@ -72,7 +76,7 @@ fun TestStudyCardView() {
                 }
             }
         }
-        StudyCardDeck(model, events)
+        StudyCardDeck(coroutineScope, model, events)
     }
 }
 
@@ -81,9 +85,11 @@ private const val TOP_Z_INDEX = 100f
 
 @Composable
 fun StudyCardDeck(
+    coroutineScope: CoroutineScope,
     model: StudyCardDeckModel,
     events: StudyCardDeckEvents
 ) {
+
     events.apply {
         flipCard.Init()
         cardsInDeck.Init()
@@ -102,7 +108,10 @@ fun StudyCardDeck(
                 events.flipCard.cardSide()
             }
             val cardZIndex = TOP_Z_INDEX - visibleIndex
-            val cardModifier = events.makeCardModifier(TOP_CARD_INDEX, visibleIndex)
+            val cardModifier = events.makeCardModifier(
+                coroutineScope,
+                TOP_CARD_INDEX,
+                visibleIndex)
                 .align(Alignment.TopCenter)
                 .zIndex(cardZIndex)
                 .size(cardWidth, cardHeight)
@@ -130,12 +139,14 @@ fun StudyCardDeck(
                                     events.flipCard.flipToFrontSide()
                                 }
                             },
-                            rightActionHandler = { events.playHandler.invoke(cardData, cardLanguage) }
+                            rightActionHandler = {
+                                events.playHandler.invoke(cardData, cardLanguage)
+                            }
                         )
                     }
                 }
             )
-            events.cardSwipe.backToInitialState()
+            events.cardSwipe.backToInitialState(coroutineScope)
         }
     }
 }

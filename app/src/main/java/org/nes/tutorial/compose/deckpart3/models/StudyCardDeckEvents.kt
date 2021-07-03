@@ -17,7 +17,6 @@ import org.nes.tutorial.compose.deckpart3.animations.FlipCardAnimation
 data class StudyCardDeckEvents(
     val cardWidth: Float,
     val cardHeight: Float,
-    val coroutineScope: CoroutineScope,
     val model: StudyCardDeckModel,
     val peepHandler: () -> Unit,
     val playHandler: (String, String) -> Unit,
@@ -25,7 +24,6 @@ data class StudyCardDeckEvents(
     val actionCallback: (String) -> Unit = {}
 ) {
     val cardSwipe: CardSwipeAnimation = CardSwipeAnimation(
-        events = this,
         model = model,
         cardWidth = cardWidth,
         cardHeight = cardHeight
@@ -35,6 +33,7 @@ data class StudyCardDeckEvents(
 
     @SuppressLint("ModifierFactoryExtensionFunction")
     fun makeCardModifier(
+        coroutineScope: CoroutineScope,
         topCardIndex: Int,
         idx: Int
     ): Modifier {
@@ -49,7 +48,10 @@ data class StudyCardDeckEvents(
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDragEnd = {
-                            cardSwipe.animateToTarget(CardSwipeState.DRAGGING) {
+                            cardSwipe.animateToTarget(
+                                coroutineScope,
+                                CardSwipeState.DRAGGING
+                            ) {
                                 if (it) {
                                     nextHandler()
                                     coroutineScope.launch {
@@ -61,7 +63,7 @@ data class StudyCardDeckEvents(
                             }
                         },
                         onDrag = { change, _ ->
-                            cardSwipe.draggingCard(change) {
+                            cardSwipe.draggingCard(coroutineScope, change) {
                                 cardsInDeck.pushBackToTheFront()
                             }
                         }

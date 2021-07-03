@@ -8,15 +8,14 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.IntOffset
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.nes.tutorial.compose.common.animationTime
 import org.nes.tutorial.compose.common.paddingOffset
 import org.nes.tutorial.compose.deckpart3.CardSwipeState
-import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckEvents
 import org.nes.tutorial.compose.deckpart3.models.StudyCardDeckModel
 
 data class CardSwipeAnimation(
-    val events: StudyCardDeckEvents,
     val model: StudyCardDeckModel,
     val cardWidth: Float,
     val cardHeight: Float
@@ -68,8 +67,12 @@ data class CardSwipeAnimation(
         return Offset(x, y)
     }
 
-    fun animateToTarget(state: CardSwipeState, finishedCallback: (Boolean) -> Unit) {
-        events.coroutineScope.launch {
+    fun animateToTarget(
+        coroutineScope: CoroutineScope,
+        state: CardSwipeState,
+        finishedCallback: (Boolean) -> Unit
+    ) {
+        coroutineScope.launch {
             val target = targetValueByState(state)
             cardDragOffset.animateTo(
                 targetValue = target,
@@ -93,24 +96,26 @@ data class CardSwipeAnimation(
         )
     }
 
-    fun backToInitialState() {
-        events.coroutineScope.launch {
-            cardDragOffset.snapTo(targetValueByState(CardSwipeState.INITIAL))
+    fun backToInitialState(coroutineScope: CoroutineScope) {
+        snapTo(coroutineScope, targetValueByState(CardSwipeState.INITIAL))
+    }
+
+    private fun snapTo(coroutineScope: CoroutineScope, target: Offset) {
+        coroutineScope.launch {
+            cardDragOffset.snapTo(target)
         }
     }
 
-    private fun snapTo(target: Offset) {
-        events.coroutineScope.launch {
-            events.cardSwipe.cardDragOffset.snapTo(target)
-        }
-    }
-
-    fun draggingCard(change: PointerInputChange, callBack: () -> Unit) {
+    fun draggingCard(
+        coroutineScope: CoroutineScope,
+        change: PointerInputChange,
+        callBack: () -> Unit
+    ) {
         if (change.pressed) {
             val original =
                 Offset(
-                    events.cardSwipe.cardDragOffset.value.x,
-                    events.cardSwipe.cardDragOffset.value.y
+                    cardDragOffset.value.x,
+                    cardDragOffset.value.y
                 )
             val summed = original + change.positionChange()
             val newValue = Offset(
@@ -118,7 +123,7 @@ data class CardSwipeAnimation(
                 y = summed.y
             )
             change.consumePositionChange()
-            events.cardSwipe.snapTo(Offset(newValue.x, newValue.y))
+            snapTo(coroutineScope, Offset(newValue.x, newValue.y))
             callBack()
         }
     }
