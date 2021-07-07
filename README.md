@@ -9,4 +9,4 @@ Part 2:
 https://sergey-nes.medium.com/part-2-ui-widgets-from-scratch-in-jetpack-compose-742a3342321b
 
 Part 3:
-coming soon
+https://sergey-nes.medium.com/part-3-ui-widgets-from-scratch-in-jetpack-compose-4225000de91d
