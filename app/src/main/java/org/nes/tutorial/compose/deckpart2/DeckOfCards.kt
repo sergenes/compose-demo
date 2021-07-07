@@ -1,4 +1,4 @@
-package org.nes.tutorial.compose.decklight
+package org.nes.tutorial.compose.deckpart2
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
