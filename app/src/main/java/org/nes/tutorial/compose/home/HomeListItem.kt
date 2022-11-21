@@ -2,6 +2,7 @@ package org.nes.tutorial.compose.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -98,6 +99,7 @@ fun HomeListItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+
                 .clickable(onClick = onClick)
                 .padding(normalSpace, noSpace, normalSpace, noSpace)
                 .fillMaxWidth()

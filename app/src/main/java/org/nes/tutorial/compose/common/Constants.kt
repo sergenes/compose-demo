@@ -29,7 +29,7 @@ val tertiaryColor = Color(0xFFb6caff)
 val cardWidth = 350.dp
 val cardHeight = 380.dp
 
-const val paddingOffset = 32f
+const val paddingOffset = 48f
 const val LOREM_IPSUM_FRONT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 const val LOREM_IPSUM_BACK =
     "Integer dolor nisl, finibus eget dignissim sit amet, semper vel ipsum."
